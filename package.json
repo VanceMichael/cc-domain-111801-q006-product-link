@@ -1,0 +1,16 @@
+{
+  "name": "product-link",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "商品数字链接在批次与序列限定下的资料采集",
+  "engines": {
+    "node": "22.x"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node --test --test-concurrency=1",
+    "demo": "node scripts/demo.mjs",
+    "start": "node scripts/start.mjs"
+  }
+}

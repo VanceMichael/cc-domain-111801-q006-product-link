@@ -1,0 +1,61 @@
+{
+  "scope": "G100",
+  "resources": {
+    "/resolver/products": {
+      "body": {
+        "resolver": "R1",
+        "links": [
+          {
+            "id": "LINK1",
+            "href": "/resolver/products/records/LINK1"
+          }
+        ]
+      }
+    },
+    "/resolver/products/records/LINK1": {
+      "body": {
+        "link": "LINK1",
+        "resolver": "R1",
+        "product": "G100",
+        "purpose": "overview",
+        "language": "zh",
+        "resource": "https://supplier.invalid/G100",
+        "general": true
+      }
+    },
+    "/resolver/products/relations/LINK1": {
+      "body": {
+        "qualifiers": {
+          "lot": "L1",
+          "serial": "S9"
+        },
+        "routes": [
+          {
+            "resolver": "R2",
+            "preserves": [
+              "product"
+            ]
+          }
+        ],
+        "generalizable": [
+          "composition"
+        ]
+      }
+    }
+  },
+  "portal": {
+    "identity": "link",
+    "records": {
+      "LINK1": {
+        "link": "LINK1",
+        "resolver": "R1",
+        "product": "G100",
+        "purpose": "overview",
+        "language": "zh",
+        "resource": "https://supplier.invalid/G100",
+        "general": true
+      }
+    },
+    "version": 1
+  }
+}
