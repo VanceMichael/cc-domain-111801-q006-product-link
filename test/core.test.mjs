@@ -10,7 +10,7 @@ import { interpret } from '../src/interpret.mjs';
 import { assess } from '../src/receiving.mjs';
 import { collect, preview } from '../src/app.mjs';
 
-const raw = {"link": "LINK1", "resolver": "R1", "product": "G100", "purpose": "overview", "language": "zh", "resource": "https://supplier.invalid/G100", "general": true};
+const raw = {"link": "LINK1", "resolver": "R1", "product": "G100", "purpose": "composition", "language": "zh", "resource": "https://supplier.invalid/G100", "general": true};
 const scope = "G100";
 const fixture = JSON.parse(await readFile(new URL('../fixtures/source.json', import.meta.url), 'utf8'));
 

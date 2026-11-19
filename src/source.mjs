@@ -1,6 +1,10 @@
 import { text } from './validation.mjs';
+import { SourceError } from './http.mjs';
 
 export const collectionPath = "/resolver/products";
+export function relationsPath(identity) {
+  return "/resolver/products/relations/" + encodeURIComponent(identity);
+}
 export async function browse(client) {
   const document = await client.get(collectionPath);
   const raw = document.raw;
@@ -17,4 +21,18 @@ export async function retrieve(client, reference) {
   if (document.raw.link !== reference.identity) throw new Error('原文身份与目录引用不符');
   if (document.raw.resolver !== reference.context) throw new Error('原文上下文与目录不符');
   return document;
+}
+export async function retrieveRelations(client, reference) {
+  try {
+    const document = await client.get(relationsPath(reference.identity));
+    if (document.raw && document.raw.link !== undefined && document.raw.link !== reference.identity) {
+      throw new Error('关联文档身份与目录引用不符');
+    }
+    return document;
+  } catch (error) {
+    if (error instanceof SourceError && (error.status === 404 || error.status === 403)) {
+      return { missing: true, status: error.status, location: new URL(relationsPath(reference.identity), client.base).href };
+    }
+    throw error;
+  }
 }

@@ -1,6 +1,6 @@
 # ProductLink
 
-ProductLink 为业务资料员提供实物限定路由与原文保管，已支持来源目录预览、直接记录领取、解析站入口身份、通用产品声明、用途与语言保留以及按业务范围形成收件记录。原文与领域收件结论分开保存，便于复查来源内容。
+ProductLink 为业务资料员提供实物限定路由与原文保管，已支持来源目录预览、直接记录领取、解析站入口身份、实物限定（批次/序列）保留、通用产品声明、用途与语言保留以及按业务范围形成收件记录。合作解析站的跳转路由、限定解释与复用声明通过关联资料领取；循环跳转、限定解释冲突、入口解释变化和用途/语言缺口都会在领取结果中显式标出停点与依据。原文与领域收件结论分开保存，便于复查来源内容。
 
 ## 环境与运行
 
@@ -26,4 +26,4 @@ docker run --rm --network none product-link:local
 
 ## 代码与来源约定
 
-`src/source.mjs` 负责来源目录与原文身份，`src/interpret.mjs` 解释当前领域记录，`src/receiving.mjs` 决定选定范围内的收件结果。`src/archive.mjs` 提供原文保管及收据落库，`src/app.mjs` 连接日常业务，`fixtures/` 与 `src/fixture-source.mjs` 提供可独立复查的本地合作源。详细字段与来源声明见 `docs/source-contract.md`。
+`src/source.mjs` 负责来源目录、记录原文与关联资料的身份，`src/relations.mjs` 解释实物限定、解析站路由与复用声明，`src/interpret.mjs` 解释当前领域记录，`src/receiving.mjs` 决定选定范围与用途需求下的收件结果（接受、待核、冲突、循环、重新确认、缺口）。`src/archive.mjs` 提供原文保管及收据落库，`src/app.mjs` 连接日常业务，`fixtures/` 与 `src/fixture-source.mjs` 提供可独立复查的本地合作源。详细字段与来源声明见 `docs/source-contract.md`。

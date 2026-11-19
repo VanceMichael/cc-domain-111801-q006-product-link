@@ -13,7 +13,11 @@ export class Archive {
       digest TEXT PRIMARY KEY, location TEXT NOT NULL, observed_at TEXT NOT NULL, size INTEGER NOT NULL);
       CREATE TABLE IF NOT EXISTS receipts (
       scope TEXT NOT NULL, business_key TEXT NOT NULL, digest TEXT NOT NULL, record TEXT NOT NULL,
-      decision TEXT NOT NULL, PRIMARY KEY(scope,business_key,digest));`);
+      decision TEXT NOT NULL, relations_digest TEXT, PRIMARY KEY(scope,business_key,digest));`);
+    const columns = this.database.prepare('PRAGMA table_info(receipts)').all().map(column => column.name);
+    if (!columns.includes('relations_digest')) {
+      this.database.exec('ALTER TABLE receipts ADD COLUMN relations_digest TEXT');
+    }
     return this;
   }
   async preserve(document) {
@@ -27,9 +31,10 @@ export class Archive {
     this.database.prepare('INSERT OR IGNORE INTO evidence VALUES(?,?,?,?)').run(digest, document.location, document.observedAt, document.bytes.length);
     return digest;
   }
-  put(scope, key, digest, record, decision) {
+  put(scope, key, digest, record, decision, relationsDigest = null) {
     if (!this.database.prepare('SELECT digest FROM evidence WHERE digest=?').get(digest)) throw new Error('原文尚未保存');
-    this.database.prepare('INSERT OR IGNORE INTO receipts VALUES(?,?,?,?,?)').run(scope, key, digest, JSON.stringify(record), JSON.stringify(decision));
+    if (relationsDigest && !this.database.prepare('SELECT digest FROM evidence WHERE digest=?').get(relationsDigest)) throw new Error('关联原文尚未保存');
+    this.database.prepare('INSERT OR IGNORE INTO receipts VALUES(?,?,?,?,?,?)').run(scope, key, digest, JSON.stringify(record), JSON.stringify(decision), relationsDigest);
   }
   records(scope) {
     return this.database.prepare('SELECT * FROM receipts WHERE scope=? ORDER BY business_key,digest').all(scope).map(row => ({ ...row, record: JSON.parse(row.record), decision: JSON.parse(row.decision) }));
